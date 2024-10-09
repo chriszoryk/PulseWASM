@@ -1,0 +1,83 @@
+@using PulseWASM.Models
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">@Title</h5>
+        <div class="form-group mb-3">
+            <label for="personaSelect" class="form-label fw-bold">Select Persona Set</label>
+            <select id="personaSelect" class="form-select" @bind="selectedPersona">
+                @foreach (var persona in personas)
+                {
+                    <option value="@persona">@persona</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="ideaTitleInput" class="form-label fw-bold">Idea Title</label>
+            <input id="ideaTitleInput" class="form-control shadow-sm" @bind="ideaTitle" placeholder="Enter your idea title" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="campaignIdeaInput" class="form-label fw-bold">Campaign Idea</label>
+            <textarea id="campaignIdeaInput" class="form-control shadow-sm" @bind="idea" placeholder="Enter your campaign idea"></textarea>
+        </div>
+
+        @if (!string.IsNullOrEmpty(MockResultDescription))
+        {
+            <div class="form-group mb-3">
+                <p>@MockResultDescription</p>
+            </div>
+            <div class="form-group mb-3">
+                <b>@MockResultLocationDescription</b>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; }
+
+    private string ideaTitle;
+    private string idea;
+    private string selectedPersona;
+    private List<string> personas = new List<string> { "Global (all)", "Northern Europe (Male)", "China (Male)", "South America (Female)" };
+    public string MockResultDescription;
+    public string MockResultLocationDescription;
+
+    public CampaignData GetCampaignData()
+    {
+        return new CampaignData
+        {
+            Title = Title,
+            IdeaTitle = ideaTitle,
+            Idea = idea,
+            SelectedPersona = selectedPersona
+        };
+    }
+
+    public void SetMockResultDescription(string description)
+    {
+        MockResultDescription = description;
+        Refresh();
+    }
+    
+    public void SetMockResultLocationDescription(string description)
+    {
+        MockResultLocationDescription = description;
+        Refresh();
+    }
+    
+    public void SetSampleData(CampaignData sampleIdea)
+    {
+        ideaTitle = sampleIdea.IdeaTitle;
+        idea = sampleIdea.Idea;
+        selectedPersona = sampleIdea.SelectedPersona;
+        Refresh();
+    }
+
+    public void Refresh()
+    {
+        StateHasChanged();
+    }
+}

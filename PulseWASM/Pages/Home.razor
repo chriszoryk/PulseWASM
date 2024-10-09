@@ -1,0 +1,105 @@
+﻿@page "/"
+@using PulseWASM.Models
+@using PulseWASM.Pages.Components
+@inject IJSRuntime JS
+
+<PageTitle>Home</PageTitle>
+
+<CampaignIdea @ref="campaign1" Title="First campaign"/>
+<CampaignIdea @ref="campaign2" Title="Second campaign"/>
+<CampaignIdea @ref="campaign3" Title="Third campaign"/>
+
+<button class="btn btn-primary" @onclick="SubmitAllData">Submit All</button>
+<button class="btn btn-primary" @onclick="PopulateWithSampleIdeas">TEST - Generate sample ideas</button>
+
+@code {
+    private CampaignIdea campaign1;
+    private CampaignIdea campaign2;
+    private CampaignIdea campaign3;
+
+    private List<CampaignData> sampleIdeas = new List<CampaignData>()
+    {
+        new CampaignData()
+        {
+            IdeaTitle = "Host a series of industry-focused webinars featuring expert insights.",
+            Idea = "Create a recurring webinar series where top industry experts and internal thought leaders discuss pressing trends and challenges relevant to your firm’s services. By providing valuable knowledge, the firm can position itself as a trusted advisor in its field, enhancing credibility and fostering relationships with potential clients. Topics should align with your firm's specialties and address the current pain points of your target audience.",
+            SelectedPersona = "Global (all)"
+        },
+        new CampaignData()
+        {
+            IdeaTitle = "Develop region-specific whitepapers highlighting unique market trends and opportunities.",
+            Idea = "Produce high-quality, regionally focused whitepapers that delve into the latest trends, regulatory changes, and economic insights specific to each market. This initiative will demonstrate the firm’s deep understanding of local business environments while offering valuable takeaways for clients. The whitepapers can be distributed via email campaigns and through partnerships with regional business associations.",
+            SelectedPersona = "Northern Europe (Male)"
+        },
+        new CampaignData()
+        {
+            IdeaTitle = "Offer free consulting services to promising local startups.",
+            Idea = "Launch a program where your firm provides complimentary consulting to early-stage startups within a specific region. This not only showcases your expertise but also helps build long-term relationships with emerging companies, positioning your firm as a valuable partner as they grow. Success stories from this initiative can be leveraged as case studies in future marketing efforts, increasing visibility and reputation.",
+            SelectedPersona = "China (Male)"
+        },
+    };
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("Component initialized");
+    }
+
+    private async Task PopulateWithSampleIdeas()
+    {
+        await JS.InvokeVoidAsync("logToConsole", "PopulateWithSampleIdeas button clicked");
+        
+        campaign1.SetSampleData(sampleIdeas[0]);
+        campaign2.SetSampleData(sampleIdeas[1]);
+        campaign3.SetSampleData(sampleIdeas[2]);
+    }
+
+    private async Task SubmitAllData()
+    {
+        await JS.InvokeVoidAsync("logToConsole", "SubmitAllData button clicked");
+
+        var campaignDataList = new List<CampaignData>
+        {
+            campaign1.GetCampaignData(),
+            campaign2.GetCampaignData(),
+            campaign3.GetCampaignData()
+        };
+
+        foreach (var campaign in campaignDataList)
+        {
+            var result = GenerateDescription(campaign.IdeaTitle, campaign.SelectedPersona);
+            if (campaign.Title == "First campaign")
+            {
+                campaign1.SetMockResultDescription(result.resultOverview);
+                campaign1.SetMockResultLocationDescription(result.locationOverview);
+            }
+            else if (campaign.Title == "Second campaign")
+            {
+                campaign2.SetMockResultDescription(result.resultOverview);
+                campaign2.SetMockResultLocationDescription(result.locationOverview);
+            }
+            else if (campaign.Title == "Third campaign")
+            {
+                campaign3.SetMockResultDescription(result.resultOverview);
+                campaign3.SetMockResultLocationDescription(result.locationOverview);
+            }
+        }
+    }
+
+    private (string resultOverview, string locationOverview) GenerateDescription(string ideaTitle, string location)
+    {
+        var random = new Random();
+        var descriptor = random.Next(3);
+
+        switch(descriptor)
+        {
+            case 1:
+                return ($"The idea '{ideaTitle}' is fantastic and has great potential!", $"This idea would be effective with 60% of users in {location}");
+            case 2:
+                return ($"The idea '{ideaTitle}' might need some improvements to be more effective.", $"This idea would be effective with 60% of users in {location}");
+            case 3:
+                return ($"The idea '{ideaTitle}' is terrible and should be discarded immediately.", $"This idea would be effective with 60% of users in {location}");
+            default:
+                return ("", "");
+        }
+    }
+}
