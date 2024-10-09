@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write  # Ensure the token has write permissions
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
