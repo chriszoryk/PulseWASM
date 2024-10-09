@@ -105,3 +105,56 @@ code {
 .green-border {
     border: 8px solid green;
 }
+
+.futuristic-header {
+    font-size: 2.5rem;
+    font-family: 'Orbitron', sans-serif;
+    color: #00ffcc;
+    text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+}
+
+.logo {
+    width: 200px; /* Adjust the width as needed */
+    height: 50px; /* Adjust the height as needed */
+    background-image: url('../assets/Pulse-Logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Adjust the gap between buttons as needed */
+    margin-top: 20px; /* Adjust the top margin as needed */
+}
+
+.custom-btn {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px; /* Adjust padding as needed */
+    font-size: 1rem; /* Adjust font size as needed */
+    cursor: pointer;
+}
+
+.custom-btn:hover {
+    background-color: #333; /* Slightly lighter black for hover effect */
+}
+
+.test-btn {
+    background-color: grey;
+    color: white;
+}
+
+.nav-scrollable {
+    font-size: 2rem; /* Adjusts the font size to be 2 times larger */
+}
+
+.nav-link {
+    padding: 1rem; /* Adjusts the padding to be larger */
+}

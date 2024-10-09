@@ -9,8 +9,10 @@
 <CampaignIdea @ref="campaign2" Title="Second campaign"/>
 <CampaignIdea @ref="campaign3" Title="Third campaign"/>
 
-<button class="btn btn-primary" @onclick="SubmitAllData">Submit All</button>
-<button class="btn btn-primary" @onclick="PopulateWithSampleIdeas">TEST - Generate sample ideas</button>
+<div class="button-container">
+    <button class="btn custom-btn" @onclick="SubmitAllData">Submit All</button>
+    <button class="btn custom-btn test-btn" @onclick="PopulateWithSampleIdeas">Generate sample ideas (Demo only)</button>
+</div>
 
 @code {
     private CampaignIdea campaign1;
