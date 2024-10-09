@@ -64,6 +64,8 @@
             campaign3.GetCampaignData()
         };
 
+        var highestRanked = 5;
+        
         foreach (var campaign in campaignDataList)
         {
             var result = GenerateDescription(campaign.IdeaTitle, campaign.SelectedPersona);
@@ -71,35 +73,59 @@
             {
                 campaign1.SetMockResultDescription(result.resultOverview);
                 campaign1.SetMockResultLocationDescription(result.locationOverview);
+                if (result.ranking < highestRanked)
+                {
+                    await JS.InvokeVoidAsync("logToConsole", "1 is highest ranked");
+                    highestRanked = result.ranking;
+                    campaign1.SetAsHighestRanked();
+                    campaign2.SetAsNotRanked();
+                    campaign3.SetAsNotRanked();
+                }
             }
             else if (campaign.Title == "Second campaign")
             {
                 campaign2.SetMockResultDescription(result.resultOverview);
                 campaign2.SetMockResultLocationDescription(result.locationOverview);
+                if (result.ranking < highestRanked)
+                {
+                    await JS.InvokeVoidAsync("logToConsole", "2 is highest ranked");
+                    highestRanked = result.ranking;
+                    campaign2.SetAsHighestRanked();
+                    campaign1.SetAsNotRanked();
+                    campaign3.SetAsNotRanked();
+                }
             }
             else if (campaign.Title == "Third campaign")
             {
                 campaign3.SetMockResultDescription(result.resultOverview);
                 campaign3.SetMockResultLocationDescription(result.locationOverview);
+                if (result.ranking < highestRanked)
+                {
+                    await JS.InvokeVoidAsync("logToConsole", "3 is highest ranked");
+                    highestRanked = result.ranking;
+                    campaign3.SetAsHighestRanked();
+                    campaign1.SetAsNotRanked();
+                    campaign2.SetAsNotRanked();
+                }
             }
         }
     }
 
-    private (string resultOverview, string locationOverview) GenerateDescription(string ideaTitle, string location)
+    private (string resultOverview, string locationOverview, int ranking) GenerateDescription(string ideaTitle, string location)
     {
         var random = new Random();
-        var descriptor = random.Next(3);
+        var descriptor = random.Next(2);
 
         switch(descriptor)
         {
+            case 0:
+                return ($"The idea '{ideaTitle}' is fantastic and has great potential!", $"This idea would be very effective with 60% of users in {location}", 1);
             case 1:
-                return ($"The idea '{ideaTitle}' is fantastic and has great potential!", $"This idea would be effective with 60% of users in {location}");
+                return ($"The idea '{ideaTitle}' might need some improvements to be more effective.", $"This idea would be mildly effective with 10% of users in {location}", 2);
             case 2:
-                return ($"The idea '{ideaTitle}' might need some improvements to be more effective.", $"This idea would be effective with 60% of users in {location}");
-            case 3:
-                return ($"The idea '{ideaTitle}' is terrible and should be discarded immediately.", $"This idea would be effective with 60% of users in {location}");
+                return ($"The idea '{ideaTitle}' is terrible and should be discarded immediately.", $"This idea would be only be effective with 3% of users in {location}", 3);
             default:
-                return ("", "");
+                return ("", "", 1000);
         }
     }
 }

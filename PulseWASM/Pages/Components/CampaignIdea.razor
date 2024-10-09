@@ -1,5 +1,5 @@
 @using PulseWASM.Models
-<div class="card mb-3 shadow-sm">
+<div class="card mb-3 shadow-sm @(IsHighestRanked ? "green-border" : "")">
     <div class="card-body">
         <h5 class="card-title">@Title</h5>
         <div class="form-group mb-3">
@@ -14,7 +14,7 @@
 
         <div class="form-group mb-3">
             <label for="ideaTitleInput" class="form-label fw-bold">Idea Title</label>
-            <input id="ideaTitleInput" class="form-control shadow-sm" @bind="ideaTitle" placeholder="Enter your idea title" />
+            <input id="ideaTitleInput" class="form-control shadow-sm" @bind="ideaTitle" placeholder="Enter your idea title"/>
         </div>
 
         <div class="form-group mb-3">
@@ -24,10 +24,10 @@
 
         @if (!string.IsNullOrEmpty(MockResultDescription))
         {
-            <div class="form-group mb-3">
+            <div class="alert alert-info" role="alert">
                 <p>@MockResultDescription</p>
             </div>
-            <div class="form-group mb-3">
+            <div class="alert alert-warning" role="alert">
                 <b>@MockResultLocationDescription</b>
             </div>
         }
@@ -44,6 +44,7 @@
     private List<string> personas = new List<string> { "Global (all)", "Northern Europe (Male)", "China (Male)", "South America (Female)" };
     public string MockResultDescription;
     public string MockResultLocationDescription;
+    public bool IsHighestRanked { get; set; }
 
     public CampaignData GetCampaignData()
     {
@@ -61,18 +62,30 @@
         MockResultDescription = description;
         Refresh();
     }
-    
+
     public void SetMockResultLocationDescription(string description)
     {
         MockResultLocationDescription = description;
         Refresh();
     }
-    
+
     public void SetSampleData(CampaignData sampleIdea)
     {
         ideaTitle = sampleIdea.IdeaTitle;
         idea = sampleIdea.Idea;
         selectedPersona = sampleIdea.SelectedPersona;
+        Refresh();
+    }
+
+    public void SetAsHighestRanked()
+    {
+        IsHighestRanked = true;
+        Refresh();
+    }
+
+    public void SetAsNotRanked()
+    {
+        IsHighestRanked = false;
         Refresh();
     }
 
